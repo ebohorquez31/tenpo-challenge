@@ -1,0 +1,14 @@
+buildscript {
+	ext {
+		springBootVersion = '2.6.6'
+		jacocoVersion = '0.8.5'
+        lombokVersion = '1.18.22'
+	}
+}
+
+plugins {
+	id 'org.springframework.boot' version "${springBootVersion}"
+	id 'jacoco'
+}
+
+apply from: './main.gradle'

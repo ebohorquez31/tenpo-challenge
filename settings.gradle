@@ -1,0 +1,15 @@
+rootProject.name = 'tenpo-challenge'
+
+include ':app-service'
+include ':model'
+include ':usecase'
+include ':jpa-repository'
+include ':api-rest'
+include ':rest-consumer'
+
+project(':app-service').projectDir = file('./applications/app-service')
+project(':model').projectDir = file('./domain/model')
+project(':usecase').projectDir = file('./domain/usecase')
+project(':jpa-repository').projectDir = file('./infrastructure/driven-adapters/jpa-repository')
+project(':api-rest').projectDir = file('./infrastructure/entry-points/api-rest')
+project(':rest-consumer').projectDir = file('./infrastructure/driven-adapters/rest-consumer')

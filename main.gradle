@@ -1,0 +1,84 @@
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+    apply plugin: 'io.spring.dependency-management'
+
+    sourceCompatibility = JavaVersion.VERSION_11
+
+    dependencies {
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    	testImplementation 'org.mockito:mockito-core:4.5.1'
+    	testImplementation 'io.projectreactor:reactor-test'    
+        
+        compileOnly "org.projectlombok:lombok:${lombokVersion}"
+        annotationProcessor  "org.projectlombok:lombok:${lombokVersion}"
+        testCompileOnly  "org.projectlombok:lombok:${lombokVersion}"
+        testAnnotationProcessor  "org.projectlombok:lombok:${lombokVersion}"
+        
+        implementation platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+        implementation "org.springframework.boot:spring-boot-starter-webflux" 
+        implementation "org.springframework.boot:spring-boot-starter-data-r2dbc"
+		implementation "org.springframework.data:spring-data-r2dbc" 
+		implementation "io.r2dbc:r2dbc-postgresql"
+		implementation "io.r2dbc:r2dbc-pool"
+        
+    }
+
+    ext.libs = [
+            connection_database: [                   
+                    'com.googlecode.jmapper-framework:jmapper-core:1.6.0.1' 
+            ]
+    ]
+    test {
+        useJUnitPlatform()
+    }
+
+    test.finalizedBy(project.tasks.jacocoTestReport)
+
+    jacocoTestReport {
+        dependsOn test
+        reports {
+            xml.enabled true
+            xml.destination file("${buildDir}/reports/jacoco.xml")
+            csv.enabled false
+            html.destination file("${buildDir}/reports/jacocoHtml")
+        }
+    }
+
+}
+
+jacoco {
+    toolVersion = "${jacocoVersion}"
+    reportsDir = file("$buildDir/reports")
+}
+
+task jacocoMergedReport(type: JacocoReport) {
+    dependsOn = subprojects.jacocoTestReport
+    additionalSourceDirs.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories.setFrom files(subprojects.sourceSets.main.allSource.srcDirs)
+    classDirectories.setFrom files(subprojects.sourceSets.main.output)
+    executionData.setFrom project.fileTree(dir: '.', include: '**/build/jacoco/test.exec')
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.enabled true
+    }
+}
+
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs = [
+            '-Amapstruct.suppressGeneratorTimestamp=true'
+    ]
+}
+tasks.named('wrapper') {
+  gradleVersion = '6.9.1'
+ }
+
+

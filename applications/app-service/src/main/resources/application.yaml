@@ -1,0 +1,42 @@
+server:
+  port: 8080
+  servlet:
+    context-path: "/tenpo"
+external-service:
+  endpoint: "http://percentage_mock:8099/percentage"
+  num-attemps: 3
+api-rate-limit:
+  num-requests: 3
+  num-minutes: 1
+db-connection-data:
+  host: postgresql_db
+  database: postgres
+  port: 5432
+spring:
+  security:
+    enabled: false                   
+  management:
+    security:
+      enabled: false 
+  application: 
+    name: "tenpo-challenge" 
+  devtools:
+    add-properties: false
+  r2dbc:
+    url: "r2dbc:postgresql://${db-connection-data.host}:${db-connection-data.port}/${db-connection-data.database}"
+    username: "postgres"
+    password: "12345" 
+  sql:
+    init: 
+      mode: always
+      platform: postgresql
+  data:
+    r2dbc:
+      repositories:
+        enabled: true
+  logging:
+    level:
+      org.springframework.r2dbc: DEBUG
+
+io.r2dbc.pool:
+  enabled: true

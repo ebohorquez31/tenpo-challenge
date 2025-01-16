@@ -1,0 +1,46 @@
+version: '3.1'
+services:
+  app:
+    container_name: challenge-app
+    image: challenge-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - tenpo
+    depends_on:
+      - postgresql_db
+  postgresql_db: 
+    container_name: postgresql_db
+    restart: always
+    volumes:
+      - /tmp:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql    
+    image: postgres:14.1-alpine
+    ports:  
+      - "5432:5432"
+    networks:
+      - tenpo
+    environment:
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+      - PGDATA=/var/lib/postgresql/data/pgdata
+  percentage_mock:
+    container_name: percentage_mock
+    image: rvancea/soapui-mockservicerunner:latest
+    command: >
+      -a "/" -p "8099" /home/soapui/PercentageMock-soapui-project.xml
+    ports:
+      - "8099:8099"
+    networks:
+      - tenpo
+    volumes:
+      - .:/home/soapui
+    restart: always
+
+networks:
+  tenpo:
+    name: tenpo

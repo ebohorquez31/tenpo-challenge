@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="7a0d6a0b-b9f8-4fd4-8f29-3ce22b4d8287" activeEnvironment="Default" name="PercentageMockProject" resourceRoot="" soapui-version="5.8.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:restMockService id="26958a15-5b90-4adb-ac5c-3c49a2b321bc" port="8081" path="/" host="IBM-PF3DFKTK" name="PercentageService" docroot=""><con:settings/><con:startScript>def fec = new Date()
+def expirationMinutes = 30
+new Timer().schedule({
+  def percent = Math.random()*100
+  log.info("percent: "+percent+", date: "+new Date())
+  context.setProperty("percentage", percent)
+} as TimerTask, 0, expirationMinutes*60000)</con:startScript><con:stopScript>log.info("Solo se ejecuta una vez, fin: ")</con:stopScript><con:properties><con:property><con:name>valor</con:name><con:value>4</con:value></con:property></con:properties><con:onRequestScript>log.info("event onrequest: ")</con:onRequestScript><con:afterRequestScript>log.info("event after: ")</con:afterRequestScript><con:restMockAction name="/percentage" method="GET" resourcePath="/percentage" id="94052419-edb0-445d-885a-df8b74f9a525"><con:settings/><con:defaultResponse xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/><con:dispatchStyle>SEQUENCE</con:dispatchStyle><con:dispatchPath>/*&#13;
+// Script dispatcher is used to select a response based on the incoming request.&#13;
+// Here are few examples showing how to match based on path, query param, header and body&#13;
+&#13;
+// Match based on path&#13;
+def requestPath = mockRequest.getPath()&#13;
+log.info "Path: "+ requestPath&#13;
+&#13;
+if( requestPath.contains("json") )&#13;
+{&#13;
+    // return the name of the response you want to dispatch&#13;
+    return "JSON Response"&#13;
+}&#13;
+&#13;
+&#13;
+// Match based on query parameter&#13;
+def queryString = mockRequest.getRequest().getQueryString()&#13;
+log.info "QueryString: " + queryString&#13;
+&#13;
+if( queryString.contains("stockholm") )&#13;
+{&#13;
+    // return the name of the response you want to dispatch&#13;
+    return "Response Stockholm"&#13;
+}&#13;
+else if( queryString.contains("london") )&#13;
+{&#13;
+    // return the name of the response you want to dispatch&#13;
+    return "Response London"&#13;
+}&#13;
+&#13;
+&#13;
+// Match based on header&#13;
+def acceptEncodingHeaderList = mockRequest.getRequestHeaders().get("Accept-Encoding")&#13;
+log.info "AcceptEncoding Header List: " + acceptEncodingHeaderList&#13;
+&#13;
+if( acceptEncodingHeaderList.contains("gzip,deflate") )&#13;
+{&#13;
+    // return the name of the response you want to dispatch&#13;
+    return "GZiped Response"&#13;
+}&#13;
+&#13;
+&#13;
+// Match based on body&#13;
+def requestBody = mockRequest.getRequestContent()&#13;
+log.info "Request body: " + requestBody&#13;
+&#13;
+if( requestBody.contains("some data") )&#13;
+{&#13;
+    // return the name of the response you want to dispatch&#13;
+    return "Response N"&#13;
+}&#13;
+*/&#13;
+</con:dispatchPath><con:response name="percentage" id="b69ae13d-5f34-4723-94ad-cff9b20e0ad6" httpResponseStatus="200" mediaType="application/json"><con:settings/><con:script/><con:responseContent>{
+    "percentage": ${percentage}
+}</con:responseContent></con:response></con:restMockAction></con:restMockService><con:properties><con:property><con:name>sample</con:name><con:value>sample</con:value></con:property></con:properties><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>
